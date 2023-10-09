@@ -1,0 +1,10 @@
+{
+  "host": "bedroom.local",
+  "presets": {
+    "ambient": 3,
+    "dev": 5,
+    "setup": 4,
+    "sun": 6,
+    "sunrise": 1
+  }
+}
