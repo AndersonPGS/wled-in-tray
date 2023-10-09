@@ -1,4 +1,4 @@
-const { app, Tray, Menu } = require('electron');
+const { app, Tray, Menu, BrowserWindow, ipcMain } = require('electron');
 const nativeImage = require('electron').nativeImage;
 const path = require('path');
 const fs = require('fs');
@@ -14,16 +14,64 @@ const configFile = fs.readFileSync('config.json', 'utf-8');
 const config = JSON.parse(configFile);
 
 let tray = null;
+let settingsWindow;
 let isLightOn = false;
 
 app.on('ready', async () => {
+  function openSettingsWindow() {
+    settingsWindow = new BrowserWindow({
+      width: 400,
+      height: 600,
+      modal: true,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false
+      }
+    });
+    // Carregue a página de configurações
+    settingsWindow.loadFile('settings.html');
+
+    // Passe as configurações para a janela de configurações
+    settingsWindow.webContents.on('did-finish-load', () => {
+      settingsWindow.webContents.send('loadConfig', config);
+    });
+
+    settingsWindow.on('closed', () => {
+      settingsWindow = null;
+    });
+
+    settingsWindow.on('close', (event) => {
+      // event.preventDefault(); // Evite que a janela seja destruída
+      settingsWindow.hide(); // Oculte a janela em vez de fechá-la
+    });
+  }
+
+  // Ouça o evento saveConfig da página de configurações
+  ipcMain.on('saveConfig', (event, config) => {
+    // Salve as informações no arquivo config.json
+    const configPath = path.join(__dirname, 'config.json');
+    fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+  });
+
+  ipcMain.on('closeSettings', () => {
+    if (settingsWindow) {
+      settingsWindow.hide(); // Oculte a janela de configurações
+    }
+  });
+
   // Cria a bandeja com o ícone padrão (apagada)
   tray = new Tray(nativeImage.createFromPath(path.join(__dirname, 'icon_off.png')).resize({ width: 16 }));
 
   // Obtém o estado atual da lâmpada assim que o programa for iniciado
   try {
-    isLightOn = await getLightStatus();
-    updateIconStatus(isLightOn, tray);
+    if (config.host) {
+      isLightOn = await getLightStatus();
+      updateIconStatus(isLightOn, tray);
+    } else {
+      // Lida com o caso em que config.host não está definido
+      sendErrorNotification('Primeira Inicialização?', 'Adicione o Hostname para conseguir utilizar o programa corretamente.');
+      openSettingsWindow()
+    }
   } catch (error) {
     sendErrorNotification('Ocorreu um erro', error);
   }
@@ -71,13 +119,39 @@ app.on('ready', async () => {
     },
     { type: 'separator' },
     {
+      icon: nativeImage.createFromPath(path.join(__dirname, 'icon_config.png')).resize({ width: 16 }),
+      label: 'Configurações',
+      click: () => {
+        // Abrir a página de configurações quando o item de menu for clicado
+        openSettingsWindow();
+      },
+    },
+    {
+      icon: nativeImage.createFromPath(path.join(__dirname, 'icon_close.png')).resize({ width: 16 }),
       label: 'Sair',
       click: () => {
+        clearInterval(verifier)
         app.quit();
+        if (settingsWindow) {
+          settingsWindow.close(); // Feche a janela de configurações se estiver aberta
+        }
       }
     }
   ]);
 
   // Define o menu de contexto para a bandeja
   tray.setContextMenu(contextMenu);
+
+
+  // Verifica o estado da lampada a cada 10 minutos
+  var verifier = setInterval(async () => {
+    try {
+      if (config.host) {
+        isLightOn = await getLightStatus();
+        updateIconStatus(isLightOn, tray);
+      }
+    } catch (error) {
+      return
+    }
+  }, 1 * 60 * 1000)
 });

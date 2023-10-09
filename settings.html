@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  
+  <link rel="stylesheet" href="settings.css">
+  <title>WLED - Configurações</title>
+</head>
+<body>
+
+  <h1>Configurações</h1>
+
+  <section class="host">
+    <h2>Hostname</h2>
+    <input type="text" id="hostInput" placeholder="Informe o host" />
+  </section>
+
+
+  <section class="presets">
+    <h2>Presets</h2>
+    <div id="presetsContainer">
+      <!-- Inputs dos presets serão adicionados aqui -->
+
+      <div class="preset-container">
+        <label>Nome:</label>
+        <input type="text">
+        <label>ID:</label>
+        <input type="number">
+
+        <button><i class="material-icons">delete</i></button>
+      </div>
+
+    </div>
+    <button id="addPresetButton">Adicionar Preset</button>
+  </section>
+
+  <button id="saveButton">Salvar</button>
+
+  <script src="settings.js"></script>
+</body>
+</html>
+
