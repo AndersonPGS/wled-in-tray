@@ -10,6 +10,7 @@ const updateLightStatus = require('./functions/updateLightStatus');
 const sendStatusNotification = require('./functions/notifications/sendStatusNotification');
 const sendErrorNotification = require('./functions/notifications/sendErrorNotification');
 const updateLightPreset = require('./functions/updateLightPreset');
+const updateToggleLightStatus = require('./functions/updateToggleLightStatus');
 
 let tray = null;
 let settingsWindow;
@@ -77,6 +78,12 @@ function createTrayContextMenu() {
   ]);
 
   tray.setContextMenu(contextMenu);
+
+  tray.on('double-click', async () => {
+    updateToggleLightStatus()
+    isLightOn = await getLightStatus()
+    updateIconStatus(isLightOn, tray)
+  });
 }
 
 function createPresetSubMenuItems() {
