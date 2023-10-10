@@ -128,10 +128,12 @@ function openSettingsWindow() {
     width: 400,
     height: 600,
     modal: true,
+    center: true,
+    titleBarStyle: 'hidden',
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
-    }
+    },
   });
 
   settingsWindow.loadFile('settings.html');
