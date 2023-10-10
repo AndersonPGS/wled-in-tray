@@ -6,7 +6,7 @@ function sendStatusNotification(isLightOn) {
   const notification = new Notification({
     title: isLightOn ? 'Luz Ligada' : 'Luz Desligada',
     body: isLightOn ? 'A luz do quarto está ligada.' : 'A luz do quarto está desligada.',
-    icon: isLightOn ? path.join(__dirname, '../../', 'icon_on.png') : path.join(__dirname, '../../', 'icon_off.png'),
+    icon: isLightOn ? path.join(__dirname, '../../images/', 'icon_on.png') : path.join(__dirname, '../../images/', 'icon_off.png'),
     silent: true,
   });
 

@@ -1,11 +1,12 @@
 const http = require('http');
 const sendErrorNotification = require('./notifications/sendErrorNotification');
+const configManager = require('./configManager');
 
-const config = require('../config.json')
 
 // Função para obter o estado atual da lâmpada
 function getLightStatus() {
   return new Promise((resolve, reject) => {
+    const config = configManager.getConfig();
     const options = {
       hostname: config.host,
       port: 80,

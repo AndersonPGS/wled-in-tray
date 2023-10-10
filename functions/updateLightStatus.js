@@ -1,11 +1,12 @@
 const http = require('http');
 const sendErrorNotification = require('./notifications/sendErrorNotification');
-
-const config = require('../config.json')
+const configManager = require('./configManager');
 
 // Função para enviar solicitações HTTP para ligar ou desligar a luz
 function updateLightStatus(status) {
   return new Promise((resolve, reject) => {
+    const config = configManager.getConfig();
+
     const requestBody = JSON.stringify({ on: status});
     const options = {
       hostname: config.host,

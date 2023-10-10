@@ -8,7 +8,7 @@ function sendErrorNotification(title, error) {
   const notificationError = new Notification({
     title: title,
     body: error,
-    icon: path.join(__dirname, '../../', 'icon_error.png'),
+    icon: path.join(__dirname, '../../images/', 'icon_error.png'),
     silent: false,
   });
 

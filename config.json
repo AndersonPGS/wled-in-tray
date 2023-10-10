@@ -1,4 +1,7 @@
 {
-  "host": "",
-  "presets": {}
+  "host": "bedroom.local",
+  "presets": {
+    "ambient": 3,
+    "sei la": 1
+  }
 }

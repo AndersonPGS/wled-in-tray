@@ -6,7 +6,7 @@ function sendPresetNotification(presetName) {
   const notificationPreset = new Notification({
     title: `Preset ${presetName}`,
     body: 'O preset foi aplicado com sucesso.',
-    icon: path.join(__dirname, '../../', 'icon_preset.png'),
+    icon: path.join(__dirname, '../../images/', 'icon_preset.png'),
     silent: true,
   });
 
