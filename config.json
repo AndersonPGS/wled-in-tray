@@ -2,6 +2,9 @@
   "host": "bedroom.local",
   "presets": {
     "ambient": 3,
-    "sei la": 1
+    "setup": 4,
+    "sunrise": 1,
+    "dev": 5,
+    "sun": 6
   }
 }
