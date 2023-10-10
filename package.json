@@ -1,21 +1,14 @@
 {
-  "name": "bedroom_center",
+  "name": "wled-to-tray",
   "version": "1.0.0",
-  "description": "",
+  "description": "Control the wled using the system tray",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron main.js"
   },
-  "author": "",
+  "author": "AndersonPGS",
   "license": "ISC",
   "devDependencies": {
-    "autoprefixer": "^10.4.16",
-    "electron": "^26.3.0",
-    "postcss-loader": "^7.3.3",
-    "tailwindcss": "^3.3.3"
-  },
-  "dependencies": {
-    "remove": "^0.1.5"
+    "electron": "^26.3.0"
   }
 }
