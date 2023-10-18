@@ -22,17 +22,26 @@ function getLightStatus() {
       });
 
       res.on('end', () => {
-        try {
-          // Recebe a resposta JSON
-          const data = JSON.parse(responseData);
-
-          // Verifique o valor da chave "on" para determinar o estado da lâmpada
-          const isLightOn = data && data.state.on === true;
-
-          resolve(isLightOn);
-        } catch (error) {
-          sendErrorNotification('Erro ao analisar a resposta JSON', `${error.name}: ${error.message}`);
-          reject(error);
+        // Verifique se a resposta é uma string válida
+        if (typeof responseData === 'string') {
+          try {
+            responseData = responseData.replace("\\","");
+            const data = JSON.parse(responseData);
+            // Verifique se data.state.on é um booleano
+            if (data && data.state && typeof data.state.on === 'boolean') {
+              const isLightOn = data.state.on;
+              resolve(isLightOn);
+            } else {
+              sendErrorNotification('Resposta JSON inválida', 'A resposta não contém o formato esperado.');
+              reject(new Error('Resposta JSON inválida'));
+            }
+          } catch (error) {
+            sendErrorNotification('Erro ao analisar a resposta JSON', `${error.name}: ${error.message}`);
+            reject(error);
+          }
+        } else {
+          sendErrorNotification('Resposta inválida', 'A resposta não é uma string válida.');
+          reject(new Error('Resposta inválida'));
         }
       });
     });
