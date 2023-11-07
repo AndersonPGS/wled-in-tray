@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 let config = require('../config.json');
+const sendErrorNotification = require('./notifications/sendErrorNotification');
 
 // Função para carregar as configurações atuais
 function loadConfig() {
@@ -8,7 +9,7 @@ function loadConfig() {
     delete require.cache[require.resolve('../config.json')];
     config = require('../config.json');
   } catch (error) {
-    console.error('Erro ao recarregar config.json:', error);
+    sendErrorNotification('Ocorreu um erro ao carregar o JSON', error);
     return
   }
 }

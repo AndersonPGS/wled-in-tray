@@ -2,7 +2,7 @@ const http = require('http');
 const sendErrorNotification = require('./notifications/sendErrorNotification');
 const configManager = require('./configManager');
 
-
+let isLightOn
 // Função para obter o estado atual da lâmpada
 function getLightStatus() {
   return new Promise((resolve, reject) => {
@@ -29,15 +29,14 @@ function getLightStatus() {
             const data = JSON.parse(responseData);
             // Verifique se data.state.on é um booleano
             if (data && data.state && typeof data.state.on === 'boolean') {
-              const isLightOn = data.state.on;
+              isLightOn = data.state.on;
               resolve(isLightOn);
             } else {
               sendErrorNotification('Resposta JSON inválida', 'A resposta não contém o formato esperado.');
               reject(new Error('Resposta JSON inválida'));
             }
           } catch (error) {
-            sendErrorNotification('Erro ao analisar a resposta JSON', `${error.name}: ${error.message}`);
-            reject(error);
+            resolve(!isLightOn)
           }
         } else {
           sendErrorNotification('Resposta inválida', 'A resposta não é uma string válida.');
